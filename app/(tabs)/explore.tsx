@@ -1,19 +1,26 @@
 import { useState } from 'react';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  Button,
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from 'react-native';
 
 export default function TabTwoScreen() {
   const [enteredGoalText, setEnteredGoalText] = useState<string>('');
-  const [courseGols, setCourseGols] = useState<string[]>([])
+  const [courseGoals, setCourseGoals] = useState<{text: string; id:string}[]>([])
 
   function goalInputHandler(enteredText:string) {
     setEnteredGoalText(enteredText);
   }
 
   function addGoalHandler() {
-    // console.log(enteredGoalText);
-    setCourseGols((currentCourseGoals) => [
-      ...courseGols,
-      enteredGoalText]);
+    setCourseGoals((currentCourseGoals) => [
+      ...currentCourseGoals,
+      { text: enteredGoalText, id: Math.random().toString() },
+    ]);
   }
 
   return (
@@ -27,11 +34,20 @@ export default function TabTwoScreen() {
         <Button title="Add Goal" onPress={addGoalHandler} />
       </View>
       <View style={styles.goalsContainer}>
-        {courseGols.map((goal) => (
-          <View key={goal} style={styles.goalItem}>
-            <Text style={styles.goalText}>{goal}</Text>
-          </View>
-        ))}
+        <FlatList
+          data={courseGoals}
+          renderItem={(itemData) => {
+            return (
+              <View style={styles.goalItem}>
+                <Text style={styles.goalText}>{itemData.item.text}</Text>
+              </View>
+            );
+          }}
+          keyExtractor={(item, index) => {
+            return item.id;
+          }}
+          alwaysBounceVertical={false}
+        />
       </View>
     </View>
   );
@@ -70,5 +86,5 @@ const styles = StyleSheet.create({
   },
   goalText: {
     color: 'white',
-  }
+  },
 });
