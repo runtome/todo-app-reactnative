@@ -1,22 +1,18 @@
 import { useState } from 'react';
 import {
-  Button,
   FlatList,
   StyleSheet,
-  Text,
-  TextInput,
   View
 } from 'react-native';
 
+import GoalInput from '@/components/GoalInput';
+import GoalItem from '@/components/GoalItem';
+
 export default function TabTwoScreen() {
-  const [enteredGoalText, setEnteredGoalText] = useState<string>('');
   const [courseGoals, setCourseGoals] = useState<{text: string; id:string}[]>([])
 
-  function goalInputHandler(enteredText:string) {
-    setEnteredGoalText(enteredText);
-  }
 
-  function addGoalHandler() {
+  function addGoalHandler(enteredGoalText: string) {
     setCourseGoals((currentCourseGoals) => [
       ...currentCourseGoals,
       { text: enteredGoalText, id: Math.random().toString() },
@@ -25,23 +21,15 @@ export default function TabTwoScreen() {
 
   return (
     <View style={styles.appContainer}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Your course goal!"
-          onChangeText={goalInputHandler}
-        />
-        <Button title="Add Goal" onPress={addGoalHandler} />
-      </View>
+      <GoalInput onAddGoal={addGoalHandler} />
       <View style={styles.goalsContainer}>
         <FlatList
           data={courseGoals}
           renderItem={(itemData) => {
-            return (
-              <View style={styles.goalItem}>
-                <Text style={styles.goalText}>{itemData.item.text}</Text>
-              </View>
-            );
+            return <GoalItem 
+            text={itemData.item.text}
+            id={itemData.item.id}
+            />;
           }}
           keyExtractor={(item, index) => {
             return item.id;
