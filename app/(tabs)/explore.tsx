@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  Button,
   FlatList,
   StyleSheet,
   View
@@ -9,7 +10,12 @@ import GoalInput from '@/components/GoalInput';
 import GoalItem from '@/components/GoalItem';
 
 export default function TabTwoScreen() {
+  const [modalIsVisible, setModalIsVisible] = useState<boolean>(false);
   const [courseGoals, setCourseGoals] = useState<{text: string; id:string}[]>([])
+
+  function startAddGoalHandler(){
+    setModalIsVisible(true);
+  }
 
 
   function addGoalHandler(enteredGoalText: string) {
@@ -26,7 +32,12 @@ export default function TabTwoScreen() {
 
   return (
     <View style={styles.appContainer}>
-      <GoalInput onAddGoal={addGoalHandler} />
+      <Button
+        title='Add new Goal'
+        color='#5e0acc'
+        onPress={startAddGoalHandler}
+      />
+      <GoalInput visible={modalIsVisible} onAddGoal={addGoalHandler} />
       <View style={styles.goalsContainer}>
         <FlatList
           data={courseGoals}
